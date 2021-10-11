@@ -56,20 +56,42 @@ class Customer {
 
   /** search customers. */
 
-  static async search(term) {
-    const results = await db.query(
-      `SELECT id, 
-         first_name AS "firstName",  
-         last_name AS "lastName", 
-         phone, 
-         notes
-      FROM customers
-      WHERE
-      document_vectors @@ PLAINTO_TSQUERY($1)
-      ORDER BY last_name, first_name` , [`%${term.toLowerCase()}%`]
-    );
-    return results.rows.map(c => new Customer(c));
+  // static async search(term) {
+  //   const results = await db.query(
+  //     `SELECT id, 
+  //        first_name AS "firstName",  
+  //        last_name AS "lastName", 
+  //        phone, 
+  //        notes
+  //     FROM customers
+  //     WHERE
+  //     document_vectors @@ PLAINTO_TSQUERY($1)
+  //     ORDER BY last_name, first_name` , [`%${term.toLowerCase()}%`]
+  //   );
+  //   return results.rows.map(c => new Customer(c));
 
+  // }
+
+  static async getByName(firstName, lastName) {
+    const results = await db.query(
+      `SELECT id,
+      first_name AS "firstName",
+      last_name AS "lastName",
+      phone,
+      notes
+      FROM customers WHERE first_name = $1 OR last_name = $2`,
+      [firstName, lastName]
+    );
+
+    const customers = results.rows;
+
+    if (customers.length === 0) {
+      const err = new Error(`No such customer: ${(firstName, lastName)}`);
+      err.status = 404;
+      throw err;
+    }
+
+    return results.rows.map(c => new Customer(c));
   }
 
 

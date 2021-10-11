@@ -25,10 +25,21 @@ router.get("/", async function (req, res, next) {
 
 /** Search Page: show list of customers by search. */
 
-router.get("/search/", async function (req, res, next) {
+// router.get("/search/", async function (req, res, next) {
+//   try {
+//     const customers = await Customer.search(req.query.term);
+//     return res.render("customer_search.html", { customers, term: req.query.term });
+//   } catch (err) {
+//     return next(err);
+//   }
+// });
+
+router.get('/search', async function (req, res, next) {
   try {
-    const customers = await Customer.search(req.query.term);
-    return res.render("customer_search.html", { customers, term: req.query.term });
+    const { firstName, lastName } = req.query;
+    const customers = await Customer.getByName(firstName, lastName);
+    console.log(customers)
+    return res.render('customer_search.html', { customers });
   } catch (err) {
     return next(err);
   }

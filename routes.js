@@ -21,6 +21,29 @@ router.get("/", async function (req, res, next) {
     return next(err);
   }
 });
+// -----------------------------------------------------------------
+
+/** Search Page: show list of customers by search. */
+
+router.get("/search/", async function (req, res, next) {
+  try {
+    const customers = await Customer.search(req.query.term);
+    return res.render("customer_search.html", { customers, term: req.query.term });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/** Best Customers Page: show list of top 10 customers  who makes most reservations. */
+
+// router.get("/best/", async function (req, res, next) {
+//   try {
+//     const customers = await Customer.best();
+//     return res.render("customer_best.html", { customers });
+//   } catch (err) {
+//     return next(err);
+//   }
+// });
 
 /** Form to add a new customer. */
 

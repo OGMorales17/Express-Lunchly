@@ -52,6 +52,52 @@ class Customer {
 
     return new Customer(customer);
   }
+  // ------------------------------------------------
+
+  /** search customers. */
+
+  static async search(term) {
+    const results = await db.query(
+      `SELECT id, 
+         first_name AS "firstName",  
+         last_name AS "lastName", 
+         phone, 
+         notes
+      FROM customers
+      WHERE
+      document_vectors @@ PLAINTO_TSQUERY($1)
+      ORDER BY last_name, first_name` , [`%${term.toLowerCase()}%`]
+    );
+    return results.rows.map(c => new Customer(c));
+
+  }
+
+
+  /** top 10 customers ordered by most reservations. */
+
+  // static async best() {
+  //   const results = await db.query(
+  //     `SELECT id, 
+  //        first_name AS "firstName",  
+  //        last_name AS "lastName", 
+  //        phone, 
+  //        notes
+  //     FROM customers
+  //     JOIN
+  //       (
+  //         SELECT 
+  //           customer_id , COUNT(*) AS count 
+  //         FROM reservations 
+  //         GROUP BY customer_id 
+  //         ORDER BY COUNT(*) DESC 
+  //         LIMIT 10
+  //       ) AS res_count
+  //     ON 
+  //       id = customer_id
+  //     ORDER BY count DESC`
+  //   );
+  //   return results.rows.map(c => new Customer(c));
+  // }
 
   /**
   * Add a function, fullName, to the Customer class. 

@@ -13,7 +13,11 @@ const router = new express.Router();
 
 /** Homepage: show list of customers. */
 
-router.get("/", async function (req, res, next) {
+router.get("/", async (req, res, next) => {
+  return res.render("customer_search.html");
+});
+
+router.get("/customers", async (req, res, next) => {
   try {
     const customers = await Customer.all();
     return res.render("customer_list.html", { customers });
@@ -21,23 +25,24 @@ router.get("/", async function (req, res, next) {
     return next(err);
   }
 });
-// -----------------------------------------------------------------
 
 /** Search Page: show list of customers by search. */
 
 // router.get("/search/", async function (req, res, next) {
 //   try {
 //     const customers = await Customer.search(req.query.term);
-//     return res.render("customer_search.html", { customers, term: req.query.term });
+//     return res.render("customer_search.html", { customers, fullName: req.query.fullName });
 //   } catch (err) {
 //     return next(err);
 //   }
 // });
 
+
 router.get('/search', async function (req, res, next) {
   try {
-    const { firstName, lastName } = req.query;
-    const customers = await Customer.getByName(firstName, lastName);
+    console.log("What is req.query?", req.query);
+    const fullName = req.query.fullName.split(" ");
+    const customers = await Customer.getByName(fullName[0], fullName[1]);
     console.log(customers)
     return res.render('customer_search.html', { customers });
   } catch (err) {
@@ -45,16 +50,17 @@ router.get('/search', async function (req, res, next) {
   }
 });
 
+
 /** Best Customers Page: show list of top 10 customers  who makes most reservations. */
 
-// router.get("/best/", async function (req, res, next) {
-//   try {
-//     const customers = await Customer.best();
-//     return res.render("customer_best.html", { customers });
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
+router.get('/top-ten', async function (req, res, next) {
+  try {
+    const customers = await Customer.getTopTen();
+    return res.render('top_10_customers.html', { customers });
+  } catch (err) {
+    return next(err);
+  }
+});
 
 /** Form to add a new customer. */
 

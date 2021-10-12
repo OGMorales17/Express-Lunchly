@@ -25,20 +25,20 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="/">
+          <a class="nav-link" href="/customers">
             Customers <span class="sr-only">(current)</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/add/">Add a Customer</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/top-ten/">Top 10 Customers</a>
+        </li>
       </ul>
       <form class="d-flex" action="/search">
-          <input type="text" aria-label="First name" placeholder="first name" name="firstName" class="form-control">
-          <input type="text" aria-label="Last name" placeholder="last name" name="lastName" class="form-control">
-          <button type="submit" class="btn-sm btn-primary">Search</button>
-        <!-- <input class="form-control me-sm-2" name="term" value="{{ term }}" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button> -->
+        <input class="form-control me-sm-2" name="fullName" value="{{ fullName }}" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
       </form>
       
    
